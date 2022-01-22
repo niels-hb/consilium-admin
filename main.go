@@ -17,12 +17,21 @@ func main() {
 }
 
 func initializeApp() (*firebase.App, error) {
-	opt := option.WithCredentialsFile("service_account.json")
-	app, err := firebase.NewApp(context.Background(), nil, opt)
+	ctx := context.Background()
 
+	opt := option.WithCredentialsFile("service_account.json")
+	app, err := firebase.NewApp(ctx, nil, opt)
 	if err != nil {
 		return nil, fmt.Errorf("error initializing app: %v", err)
 	}
+
+	client, err := app.Firestore(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("error initializing firestore: %v", err)
+	}
+
+	handlers.Context = ctx
+	handlers.Client = client
 
 	return app, err
 }

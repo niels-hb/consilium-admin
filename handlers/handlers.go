@@ -1,6 +1,14 @@
 package handlers
 
-import "github.com/thatisuday/commando"
+import (
+	"context"
+
+	"cloud.google.com/go/firestore"
+	"github.com/thatisuday/commando"
+)
+
+var Context context.Context
+var Client *firestore.Client
 
 func Export(_ map[string]commando.ArgValue, flags map[string]commando.FlagValue) {
 	uid, _ := flags["uid"].GetString()

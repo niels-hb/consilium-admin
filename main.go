@@ -45,6 +45,7 @@ func initializeCommando() {
 	commando.
 		Register("export").
 		SetShortDescription("export a users documents to a JSON file").
+		SetDescription("Export all transactions and schedules owned by the user identified by <uid>. <target> specifies a JSON file in which the documents should be saved.").
 		AddFlag("uid,u", "UID of the user", commando.String, nil).
 		AddFlag("target,t", "target file", commando.String, nil).
 		SetAction(handlers.Export)
@@ -52,6 +53,7 @@ func initializeCommando() {
 	commando.
 		Register("import").
 		SetShortDescription("import data from a JSON file").
+		SetDescription("Import a previously created export JSON file. The owner of the created documents will be the user identified by <uid>. Combining the export and import commands essentially allows the duplication of documents to another user account without modifying the original user. <source> specifies the JSON file created using the export command.").
 		AddFlag("uid,u", "UID of the user", commando.String, nil).
 		AddFlag("source,s", "source file", commando.String, nil).
 		AddFlag("dry-run", "don't send actual requests to the server", commando.Bool, nil).
@@ -60,6 +62,7 @@ func initializeCommando() {
 	commando.
 		Register("migrate").
 		SetShortDescription("migrate documents to a different user").
+		SetDescription("Set the UID for all transactions and schedules owned by the user identified by <from> to the UID <to>. This will effectively transfer ownership of all transactions and schedules the user <from> has created.").
 		AddFlag("from,f", "UID of the current owner", commando.String, nil).
 		AddFlag("to,t", "UID of the user to which ownership should be transferred", commando.String, nil).
 		AddFlag("dry-run", "don't send actual requests to the server", commando.Bool, nil).

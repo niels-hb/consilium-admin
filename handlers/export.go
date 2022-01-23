@@ -27,7 +27,7 @@ func startExport(uid string, target string) {
 func exportCollection(collection string, uid string) []map[string]interface{} {
 	fmt.Printf("Exporting %v...\n", collection)
 
-	documents, _ := Client.Collection(collection).Where("uid", "==", uid).Documents(Context).GetAll()
+	documents, _ := FirestoreClient.Collection(collection).Where("uid", "==", uid).Documents(Context).GetAll()
 	var results []map[string]interface{}
 
 	for _, document := range documents {

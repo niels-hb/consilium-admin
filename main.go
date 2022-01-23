@@ -25,13 +25,19 @@ func initializeApp() (*firebase.App, error) {
 		return nil, fmt.Errorf("error initializing app: %v", err)
 	}
 
-	client, err := app.Firestore(ctx)
+	firestoreClient, err := app.Firestore(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("error initializing firestore: %v", err)
 	}
 
+	authClient, err := app.Auth(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("error initializing auth: %v", err)
+	}
+
 	handlers.Context = ctx
-	handlers.Client = client
+	handlers.FirestoreClient = firestoreClient
+	handlers.AuthClient = authClient
 
 	return app, err
 }

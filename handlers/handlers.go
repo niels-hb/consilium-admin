@@ -4,11 +4,13 @@ import (
 	"context"
 
 	"cloud.google.com/go/firestore"
+	"firebase.google.com/go/auth"
 	"github.com/thatisuday/commando"
 )
 
 var Context context.Context
-var Client *firestore.Client
+var FirestoreClient *firestore.Client
+var AuthClient *auth.Client
 
 func Export(_ map[string]commando.ArgValue, flags map[string]commando.FlagValue) {
 	uid, _ := flags["uid"].GetString()

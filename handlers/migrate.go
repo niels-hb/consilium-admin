@@ -24,7 +24,7 @@ func startMigration(from string, to string, dryRun bool) {
 func migrateCollection(collection string, from string, to string, dryRun bool) {
 	fmt.Printf("Migrating %v...\n", collection)
 
-	schedules, _ := Client.Collection(collection).Where("uid", "==", from).Documents(Context).GetAll()
+	schedules, _ := FirestoreClient.Collection(collection).Where("uid", "==", from).Documents(Context).GetAll()
 	scheduleCount := len(schedules)
 
 	for i := 0; i < scheduleCount; i++ {

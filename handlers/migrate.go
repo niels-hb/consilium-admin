@@ -24,11 +24,11 @@ func startMigration(from string, to string, dryRun bool) {
 func migrateCollection(collection string, from string, to string, dryRun bool) {
 	fmt.Printf("Migrating %v...\n", collection)
 
-	schedules, _ := FirestoreClient.Collection(collection).Where("uid", "==", from).Documents(Context).GetAll()
-	scheduleCount := len(schedules)
+	documents, _ := FirestoreClient.Collection(collection).Where("uid", "==", from).Documents(Context).GetAll()
+	documentCount := len(documents)
 
-	for i := 0; i < scheduleCount; i++ {
-		doc := schedules[i]
+	for i := 0; i < documentCount; i++ {
+		doc := documents[i]
 
 		data := doc.Data()
 		data["uid"] = to
@@ -36,7 +36,7 @@ func migrateCollection(collection string, from string, to string, dryRun bool) {
 		updateDocument(doc.Ref, data, dryRun)
 	}
 
-	fmt.Printf("Migrated %v %v.\n", scheduleCount, collection)
+	fmt.Printf("Migrated %v %v.\n", documentCount, collection)
 }
 
 func updateDocument(documentRef *firestore.DocumentRef, data map[string]interface{}, dryRun bool) {

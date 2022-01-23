@@ -68,11 +68,11 @@ func initializeCommando() {
 		Register("generate").
 		SetShortDescription("create random users and data").
 		SetDescription("Create <count> random users. Each user will have <transactions-min> <= x <= <transactions-max> transactions and <schedules-min> <= y <= <schedules-max> schedules generated as well.").
-		AddFlag("count,c", "number of users to create", commando.Int, nil).
-		AddFlag("transactions-min", "minimum number of transactions to generate per created user", commando.Int, nil).
-		AddFlag("transactions-max", "maximum number of transactions to generate per created user", commando.Int, nil).
-		AddFlag("schedules-min", "minimum number of schedules to generate per created user", commando.Int, nil).
-		AddFlag("schedules-max", "maximum number of schedules to generate per created user", commando.Int, nil).
+		AddFlag("count,c", "number of users to create", commando.Int, 1).
+		AddFlag("transactions-min", "minimum number of transactions to generate per created user", commando.Int, 0).
+		AddFlag("transactions-max", "maximum number of transactions to generate per created user", commando.Int, 0).
+		AddFlag("schedules-min", "minimum number of schedules to generate per created user", commando.Int, 0).
+		AddFlag("schedules-max", "maximum number of schedules to generate per created user", commando.Int, 0).
 		AddFlag("dry-run", "don't send actual requests to the server", commando.Bool, nil).
 		SetAction(handlers.Generate)
 

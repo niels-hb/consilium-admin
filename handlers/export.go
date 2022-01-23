@@ -31,7 +31,9 @@ func exportCollection(collection string, uid string) []map[string]interface{} {
 	var results []map[string]interface{}
 
 	for _, document := range documents {
-		results = append(results, document.Data())
+		data := document.Data()
+		delete(data, "uid")
+		results = append(results, data)
 	}
 
 	fmt.Printf("Exported %v %v.\n", len(documents), collection)

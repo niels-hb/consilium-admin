@@ -2,55 +2,66 @@ package handlers
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"os"
 )
 
-type export struct {
-	Transactions []map[string]interface{} `json:"transactions"`
-	Schedules    []map[string]interface{} `json:"schedules"`
-}
-
 func startExport(uid string, target string) {
-	fmt.Printf("Writing documents for user %v into %v.\n", uid, target)
+	log.Printf("Writing documents for user %v into %v.\n", uid, target)
 	println()
 
-	var data export
+	var data FileExport
 
-	data.Transactions = exportCollection("transactions", uid)
-	data.Schedules = exportCollection("schedules", uid)
+	log.Println("Exporting transactions...")
+	data.Transactions = exportTransactions(uid)
+	log.Printf("Exported %v transactions.\n", len(data.Transactions))
 
+	println()
+
+	log.Println("Exporting schedules...")
+	data.Schedules = exportSchedules(uid)
+	log.Printf("Exported %v schedules.\n", len(data.Schedules))
+
+	println()
+
+	log.Println("Writing export to file...")
 	writeFile(target, data)
+	log.Println("Wrote export to file.")
 }
 
-func exportCollection(collection string, uid string) []map[string]interface{} {
-	fmt.Printf("Exporting %v...\n", collection)
-
-	documents, _ := FirestoreClient.Collection(collection).Where("uid", "==", uid).Documents(Context).GetAll()
-	var results []map[string]interface{}
+func exportTransactions(uid string) []TransactionExport {
+	documents, _ := FirestoreClient.Collection("transactions").Where("uid", "==", uid).Documents(Context).GetAll()
+	var results []TransactionExport
 
 	for _, document := range documents {
-		data := document.Data()
-		delete(data, "uid")
-		results = append(results, data)
-	}
+		var documentExport TransactionExport
+		documentExport.fromJSON(document.Data())
 
-	fmt.Printf("Exported %v %v.\n", len(documents), collection)
-	println()
+		results = append(results, documentExport)
+	}
 
 	return results
 }
 
-func writeFile(filename string, data export) {
-	println("Writing export to file...")
+func exportSchedules(uid string) []ScheduleExport {
+	documents, _ := FirestoreClient.Collection("schedules").Where("uid", "==", uid).Documents(Context).GetAll()
+	var results []ScheduleExport
 
+	for _, document := range documents {
+		var documentExport ScheduleExport
+		documentExport.fromJSON(document.Data())
+
+		results = append(results, documentExport)
+	}
+
+	return results
+}
+
+func writeFile(filename string, data FileExport) {
 	content, _ := json.MarshalIndent(data, "", " ")
 	err := os.WriteFile(filename, content, 0644)
 
 	if err != nil {
 		log.Fatal(err.Error())
 	}
-
-	println("Wrote export to file.")
 }

@@ -1,18 +1,19 @@
 package handlers
 
 import (
-	"fmt"
+	"log"
 
 	"cloud.google.com/go/firestore"
 )
 
 func startMigration(from string, to string, dryRun bool) {
-	println("Running migration with the following parameters:\n")
-	println("From:", from)
-	println("To:", to)
+	log.Println("Running migration with the following parameters:")
+	println()
+	log.Println("From:", from)
+	log.Println("To:", to)
 
 	if dryRun {
-		println("\n[!] Dry run is active. Won't send any writing requests.")
+		log.Println("[!] Dry run is active. Won't send any writing requests.")
 	}
 
 	println()
@@ -22,7 +23,7 @@ func startMigration(from string, to string, dryRun bool) {
 }
 
 func migrateCollection(collection string, from string, to string, dryRun bool) {
-	fmt.Printf("Migrating %v...\n", collection)
+	log.Printf("Migrating %v...\n", collection)
 
 	documents, _ := FirestoreClient.Collection(collection).Where("uid", "==", from).Documents(Context).GetAll()
 	documentCount := len(documents)
@@ -36,7 +37,7 @@ func migrateCollection(collection string, from string, to string, dryRun bool) {
 		updateDocument(doc.Ref, data, dryRun)
 	}
 
-	fmt.Printf("Migrated %v %v.\n", documentCount, collection)
+	log.Printf("Migrated %v %v.\n", documentCount, collection)
 }
 
 func updateDocument(documentRef *firestore.DocumentRef, data map[string]interface{}, dryRun bool) {

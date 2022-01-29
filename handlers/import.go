@@ -5,6 +5,8 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+
+	"github.com/niels-hb/consilium-admin/models"
 )
 
 func startImport(uid string, source string, dryRun bool) {
@@ -29,13 +31,13 @@ func startImport(uid string, source string, dryRun bool) {
 	log.Printf("Imported %v schedules.\n", len(export.Schedules))
 }
 
-func readFile(source string) FileExport {
+func readFile(source string) models.FileExport {
 	jsonFile, err := os.Open(source)
 	if err != nil {
 		log.Fatal(err.Error())
 	}
 
-	var export FileExport
+	var export models.FileExport
 
 	byteValue, _ := ioutil.ReadAll(jsonFile)
 	json.Unmarshal(byteValue, &export)
@@ -43,12 +45,12 @@ func readFile(source string) FileExport {
 	return export
 }
 
-func writeTransactions(uid string, documents []TransactionExport, dryRun bool) {
+func writeTransactions(uid string, documents []models.TransactionExport, dryRun bool) {
 	for _, document := range documents {
 		document.UID = uid
 
 		if !dryRun {
-			ref, _, err := FirestoreClient.Collection("transactions").Add(Context, document.toMap())
+			ref, _, err := FirestoreClient.Collection("transactions").Add(Context, document.ToMap())
 
 			if err != nil {
 				log.Fatal(err.Error())
@@ -59,12 +61,12 @@ func writeTransactions(uid string, documents []TransactionExport, dryRun bool) {
 	}
 }
 
-func writeSchedules(uid string, documents []ScheduleExport, dryRun bool) {
+func writeSchedules(uid string, documents []models.ScheduleExport, dryRun bool) {
 	for _, document := range documents {
 		document.UID = uid
 
 		if !dryRun {
-			ref, _, err := FirestoreClient.Collection("schedules").Add(Context, document.toMap())
+			ref, _, err := FirestoreClient.Collection("schedules").Add(Context, document.ToMap())
 
 			if err != nil {
 				log.Fatal(err.Error())

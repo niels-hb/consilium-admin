@@ -1,4 +1,4 @@
-package handlers
+package models
 
 import (
 	"encoding/json"
@@ -19,7 +19,7 @@ type TransactionExport struct {
 	Note        string     `json:"note,omitempty"`
 }
 
-func (t *TransactionExport) fromJSON(data map[string]interface{}) {
+func (t *TransactionExport) FromJSON(data map[string]interface{}) {
 	marshalled, _ := json.Marshal(data)
 
 	var export TransactionExport
@@ -28,7 +28,7 @@ func (t *TransactionExport) fromJSON(data map[string]interface{}) {
 	*t = export
 }
 
-func (t *TransactionExport) toMap() map[string]interface{} {
+func (t *TransactionExport) ToMap() map[string]interface{} {
 	return map[string]interface{}{
 		"uid":          t.UID,
 		"amount_cents": t.AmountCents,
@@ -52,7 +52,7 @@ type ScheduleExport struct {
 	ScheduleType    string     `json:"type"`
 }
 
-func (s *ScheduleExport) fromJSON(data map[string]interface{}) {
+func (s *ScheduleExport) FromJSON(data map[string]interface{}) {
 	marshalled, _ := json.Marshal(data)
 
 	var export ScheduleExport
@@ -61,7 +61,7 @@ func (s *ScheduleExport) fromJSON(data map[string]interface{}) {
 	*s = export
 }
 
-func (s *ScheduleExport) toMap() map[string]interface{} {
+func (s *ScheduleExport) ToMap() map[string]interface{} {
 	return map[string]interface{}{
 		"uid":              s.UID,
 		"amount_cents":     s.AmountCents,

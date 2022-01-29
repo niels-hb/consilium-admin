@@ -4,13 +4,15 @@ import (
 	"encoding/json"
 	"log"
 	"os"
+
+	"github.com/niels-hb/consilium-admin/models"
 )
 
 func startExport(uid string, target string) {
 	log.Printf("Writing documents for user %v into %v.\n", uid, target)
 	println()
 
-	var data FileExport
+	var data models.FileExport
 
 	log.Println("Exporting transactions...")
 	data.Transactions = exportTransactions(uid)
@@ -29,13 +31,13 @@ func startExport(uid string, target string) {
 	log.Println("Wrote export to file.")
 }
 
-func exportTransactions(uid string) []TransactionExport {
+func exportTransactions(uid string) []models.TransactionExport {
 	documents, _ := FirestoreClient.Collection("transactions").Where("uid", "==", uid).Documents(Context).GetAll()
-	var results []TransactionExport
+	var results []models.TransactionExport
 
 	for _, document := range documents {
-		var documentExport TransactionExport
-		documentExport.fromJSON(document.Data())
+		var documentExport models.TransactionExport
+		documentExport.FromJSON(document.Data())
 
 		results = append(results, documentExport)
 	}
@@ -43,13 +45,13 @@ func exportTransactions(uid string) []TransactionExport {
 	return results
 }
 
-func exportSchedules(uid string) []ScheduleExport {
+func exportSchedules(uid string) []models.ScheduleExport {
 	documents, _ := FirestoreClient.Collection("schedules").Where("uid", "==", uid).Documents(Context).GetAll()
-	var results []ScheduleExport
+	var results []models.ScheduleExport
 
 	for _, document := range documents {
-		var documentExport ScheduleExport
-		documentExport.fromJSON(document.Data())
+		var documentExport models.ScheduleExport
+		documentExport.FromJSON(document.Data())
 
 		results = append(results, documentExport)
 	}
@@ -57,7 +59,7 @@ func exportSchedules(uid string) []ScheduleExport {
 	return results
 }
 
-func writeFile(filename string, data FileExport) {
+func writeFile(filename string, data models.FileExport) {
 	content, _ := json.MarshalIndent(data, "", " ")
 	err := os.WriteFile(filename, content, 0644)
 
